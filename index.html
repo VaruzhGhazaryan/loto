@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app='lotoApp'>
+<head>
+	<title>Loto Aplication</title>
+	<link rel="stylesheet" type="text/css" href="libraries/bootstrap-3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="libraries/font-awesome-4.7.0/css/font-awesome.min.css">
+	<script type="text/javascript" src="libraries/angular.min.js"></script>
+	<script type="text/javascript" src="app/models/tables-model.js"></script>
+	<script type="text/javascript" src="app/app.js"></script>
+	<script type="text/javascript" src="app/controllers/tables-ctrl.js"></script>
+	<style type="text/css">
+		.label{
+			padding: 4px 15px;
+		    border-radius: 10px;
+		    color: #636363;
+		}
+	</style>
+</head>
+<body>
+<div class="container" ng-controller='tablesCtrl'>
+	<table class="table table-responsive table-hover">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Table name</th>
+				<th>Users</th>
+				<th>Is private</th>
+				<th>Status</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="game in model">
+				<td>{{$index + 1}}</td>
+				<td>{{game.table_name}}</td>
+				<td>{{game.users_list.length}} of {{game.max_user_count}}</td>
+				<td><span ng-class="game.is_private ? 'fa fa-unlock text-success' : 'fa fa-lock  text-danger'"></span></td>
+				<td><span class="label" 
+					ng-class="{'waiting':'bg-warning',
+							   'started':'bg-danger', 
+							   'finished': 'bg-success'}[game.status]">
+						{{game.status}}
+					</span>
+				</td>
+				<td><button class="btn btn-success" ng-disabled="game.users_list.length < game.min_user_count">Play</button></td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+</body>
+</html>
