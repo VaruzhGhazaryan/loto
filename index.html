@@ -3,18 +3,11 @@
 <head>
 	<title>Loto Aplication</title>
 	<link rel="stylesheet" type="text/css" href="libraries/bootstrap-3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="libraries/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script type="text/javascript" src="libraries/angular.min.js"></script>
 	<script type="text/javascript" src="app/models/tables-model.js"></script>
 	<script type="text/javascript" src="app/app.js"></script>
 	<script type="text/javascript" src="app/controllers/tables-ctrl.js"></script>
-	<style type="text/css">
-		.label{
-			padding: 4px 15px;
-		    border-radius: 10px;
-		    color: #636363;
-		}
-	</style>
 </head>
 <body>
 <div class="container" ng-controller='tablesCtrl'>
@@ -23,41 +16,43 @@
 			<tr>
 				<th>#</th>
 				<th>Table name</th>
+				<th>Owner</th>
 				<th>Users</th>
 				<th>Is private</th>
 				<th>Status</th>
 				<th></th>
+				<th></th>
+
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="game in model">
 				<td>{{$index + 1}}</td>
 				<td>{{game.table_name}}</td>
+				<td></td>
 				<td>{{game.users_list.length}} of {{game.max_user_count}}</td>
-				<td><span ng-class="game.is_private ? 'fa fa-lock  text-danger' : 'fa fa-unlock text-success'"></span></td>
-				<td><span class="label" 
-					ng-class="{'waiting':'bg-warning',
-							   'started':'bg-danger', 
-							   'finished': 'bg-success'}[game.status]">
-						{{game.status}}
-					</span>
+				<td ng-switch="game.is_private">
+					<i class="fa fa-lock" aria-hidden="true" ng-switch-when="true" style="color: red"></i>
+					<i class="fa fa-unlock" aria-hidden="true" ng-switch-when="false" style="color: blue"></i>
 				</td>
-				<td><button class="btn btn-success" ng-disabled="game.users_list.length < game.min_user_count || game.is_private">Join</button></td>
+				<td ng-class="{warning:game.status=='waiting', danger:game.status=='started', success: game.status=='finished' }">{{game.status}}</td>
+				<td><button class="btn btn-success" ng-click='funForButton(game)' ng-disabled='game.is_private || game.users_list.length >= game.max_user_count'>Join</button></td>
+				<td><button class="btn btn-success" ng-click='remover($event, $this)'>Remove</button></td>
 			</tr>
 		</tbody>
 	</table>
 </div>
-<div class="container">
+<div class="container" ng-controller='tablesCtrl'>
 	<form id="newTableId" action="">
 		<div class="col-xs-3">
-			<input type="text" name="tableName" class="form-control" placeholder="Enter Name">	
-		</div>
+			<input type="text" name="tableName" id="tableName" class="form-control" placeholder="Enter Name" required>	
+		</div> 
 		<div class="col-xs-3">
-			<input type="text" name="maxUsers" class="form-control" placeholder="Enter maximum users count">
+			<input type="text" name="maxUsers" id="maxUsers" class="form-control" placeholder="Enter maximum users count" required>
 		</div>		
-		<label class="checkbox-inline"><input type="checkbox" name="private"> Private </label>
-		<button class="btn btn-success">Create</button>
-	</form>
+		<label class="checkbox-inline"><input type="checkbox" name="private" id="private"> Private </label>
+		<button class="btn btn-success"  ng-click='createNewLine($event)'>Create</button>
+	</form> 
 </div>
 </body>
 </html>
