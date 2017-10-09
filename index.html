@@ -34,7 +34,7 @@
 				<td>{{$index + 1}}</td>
 				<td>{{game.table_name}}</td>
 				<td>{{game.users_list.length}} of {{game.max_user_count}}</td>
-				<td><span ng-class="game.is_private ? 'fa fa-unlock fa-2x text-success' : 'fa fa-lock fa-2x  text-danger'"></span></td>
+				<td><span ng-class="game.is_private ? 'fa fa-lock fa-2x text-danger' : 'fa fa-unlock fa-2x  text-success'"></span></td>
 				<td><span class="label" 
 					ng-class="{'waiting':'bg-warning',
 							   'started':'bg-danger', 
@@ -42,7 +42,7 @@
 						{{game.status}}
 					</span>
 				</td>
-				<td><button class="btn btn-success" ng-disabled="game.users_list.length < game.min_user_count">Play</button></td>
+				<td><button class="btn btn-success" ng-disabled="game.users_list.length >= game.max_user_count || game.is_private==true">Play</button></td>
 			</tr>
 		</tbody>
 	</table>
