@@ -3,49 +3,71 @@
 <head>
 	<title>Loto Aplication</title>
 	<link rel="stylesheet" type="text/css" href="libraries/bootstrap-3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="libraries/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 	<script type="text/javascript" src="libraries/angular.min.js"></script>
 	<script type="text/javascript" src="app/models/tables-model.js"></script>
+	<script type="text/javascript" src="app/models/users-model.js"></script>
 	<script type="text/javascript" src="app/app.js"></script>
 	<script type="text/javascript" src="app/controllers/tables-ctrl.js"></script>
-	<style type="text/css">
-		.label{
-			padding: 4px 15px;
-		    border-radius: 10px;
-		    color: #636363;
-		}
+	<style>
+	td, th {
+		text-align: center;
+	}
+	[data-cl="displayDiv"] {
+		display: inline-block;
+		text-align:  center;
+		position: relative;
+		left: 40%;
+		padding: 10px;
+		border: 1px solid #3c763d;
+	}
+	input {
+		margin: 3px;
+	}
 	</style>
 </head>
 <body>
-<div class="container" ng-controller='tablesCtrl'>
-	<table class="table table-responsive table-hover">
+<div class="container " ng-controller='tablesCtrl'>
+	<table class="table table-responsive table-hover col-sm-9">
 		<thead>
 			<tr>
 				<th>#</th>
 				<th>Table name</th>
+				<th>Owner</th>
 				<th>Users</th>
 				<th>Is private</th>
 				<th>Status</th>
+				<th></th>
 				<th></th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="game in model">
 				<td>{{$index + 1}}</td>
-				<td>{{game.table_name}}</td>
+				<td ng-init="name=''">{{game.table_name}}</td>
+				<td>{{game.owner}}</td>
 				<td>{{game.users_list.length}} of {{game.max_user_count}}</td>
-				<td><span ng-class="game.is_private ? 'fa fa-lock fa-2x text-danger' : 'fa fa-unlock fa-2x  text-success'"></span></td>
-				<td><span class="label" 
-					ng-class="{'waiting':'bg-warning',
-							   'started':'bg-danger', 
-							   'finished': 'bg-success'}[game.status]">
-						{{game.status}}
-					</span>
-				</td>
-				<td><button class="btn btn-success" ng-disabled="game.users_list.length >= game.max_user_count || game.is_private==true">Play</button></td>
+				<td><any ng-switch= game.is_private>
+                    <any ng-switch-when="false"><i class="fa fa-unlock" style="color: royalblue"></i></any>
+                    <any ng-switch-when="true"><i class="fa fa-lock" style="color: mediumvioletred"></i></any>
+                    </any></td>
+                <td style="border-radius: 15px" ng-class="{'bg-danger':game.status=='started', 'bg-warning':game.status=='waiting', 'bg-success':game.status=='finished'}">{{game.status}}</td>
+                <td ng-init="x.is_private"><button class="btn btn-success" ng-disabled="game.is_private || game.users_list.length >= game.max_user_count" ng-click="myFunc(game.users_list)">Join</button></td>
+								<td><button class="btn btn-info" ng-click="cleanRow(game.table_name)" ng-disabled="checkOwner(game.owner)">Clean</button></td>
 			</tr>
 		</tbody>
 	</table>
+	<div class="nav">
+	<div data-cl="displayDiv" class="col-sm-3 form-group has-success">
+	<input type="text" class="form-control form-control-success" placeholder="Table Name" ng-model="name"/>
+	<input type="text" class="form-control form-control-success" placeholder="Users' max count" ng-model="users "/>
+	<label>
+	<input type="checkbox" ng-model="isprivate"/>
+	Is private
+	</label>
+	<button class="btn btn-success" ng-click="createElem()">Add Row</button>
+	</div>
+	</div>
 </div>
 </body>
 </html>
