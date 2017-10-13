@@ -3,20 +3,17 @@
 <head>
 	<title>Loto Aplication</title>
 	<link rel="stylesheet" type="text/css" href="libraries/bootstrap-3.3.7/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="libraries/font-awesome-4.7.0/css/font-awesome.min.css">
 	<script type="text/javascript" src="libraries/angular.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/style.css">
 	<script type="text/javascript" src="app/models/tables-model.js"></script>
 	<script type="text/javascript" src="app/app.js"></script>
 	<script type="text/javascript" src="app/controllers/tables-ctrl.js"></script>
-	<style type="text/css">
-		.label{
-			padding: 4px 15px;
-		    border-radius: 10px;
-		    color: #636363;
-		}
-	</style>
 </head>
 <body>
+<div class="container header">
+	<h1>Loto Gaming</h1>
+</div>
 <div class="container" ng-controller='tablesCtrl'>
 	<table class="table table-responsive table-hover">
 		<thead>
@@ -27,25 +24,60 @@
 				<th>Is private</th>
 				<th>Status</th>
 				<th></th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="game in model">
+			<tr ng-repeat="game in model" ng-init="disableBtn=false">
 				<td>{{$index + 1}}</td>
 				<td>{{game.table_name}}</td>
-				<td>{{game.users_list.length}} of {{game.max_user_count}}</td>
-				<td><span ng-class="game.is_private ? 'fa fa-lock fa-2x text-danger' : 'fa fa-unlock fa-2x  text-success'"></span></td>
-				<td><span class="label" 
-					ng-class="{'waiting':'bg-warning',
-							   'started':'bg-danger', 
-							   'finished': 'bg-success'}[game.status]">
-						{{game.status}}
-					</span>
-				</td>
-				<td><button class="btn btn-success" ng-disabled="game.users_list.length >= game.max_user_count || game.is_private==true">Play</button></td>
+				<td>{{game.min_user_count}} of {{game.max_user_count}}</td>
+				<th><i ng-class="game.icon"></i></th>
+				<td ng-class="game.status">{{game.status}}</td>
+				<td><button ng-disabled="game.is_private" ng-class="game.button" class="btn btn-success">Join</button></td>
+				<td><input type="button" ng-disabled="game.icon" value="Remove" class="btn btn-danger" ng-click="deleteUser(user)"/></td>
+
 			</tr>
 		</tbody>
 	</table>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<form ng-submit="addNew(tableModel)">
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Table name" ng-model="tableModel.table_name" required>
+						</div>
+						<div class="form-group col-xs-2">
+							<input type="text" class="form-control" placeholder="Min user count 2 -" ng-model="tableModel.min_user_count" required>
+						</div>
+						<div class="form-group col-xs-2">
+							<input type="text" class="form-control" placeholder="Max user count" ng-model="tableModel.max_user_count" required>
+						</div>
+						<p style="float: left">Is Private : &nbsp</p>
+						<div class="slideThree">
+							<input class="sirun" type="checkbox" ng-model="tableModel.icon" value="None" id="slideThree" name="check" checked />
+							<label for="slideThree"></label>
+						</div>
+
+						<br/><br/>
+						<div class="clearfix">
+							<input type="submit" value="Add new user" class="btn btn-primary">
+						</div>
+
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 </div>
+
+
+
+
+
 </body>
 </html>
